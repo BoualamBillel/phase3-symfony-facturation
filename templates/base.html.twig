@@ -5,14 +5,12 @@
         <title>{% block title %}FacturSaas{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         
-        {# Chargement de FontAwesome pour nos icônes #}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         
         {% block stylesheets %}
         {% endblock %}
 
         {% block javascripts %}
-            {# C'est cette ligne qui charge ton Tailwind local ! #}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
 
@@ -25,14 +23,11 @@
     </head>
     <body class="bg-[#F8F9FB] font-sans text-gray-900">
         
-        {# --- 1. OUVERTURE DE LA STRUCTURE (Uniquement si connecté) --- #}
         {% if app.user %}
             <div class="min-h-screen flex">
                 
-                {# BARRE LATÉRALE (Sidebar) #}
                 <aside class="w-72 bg-white border-r border-gray-100 flex flex-col fixed h-full z-10">
                     
-                    {# En-tête Sidebar (Logo) #}
                     <div class="p-8">
                         <div class="flex items-center gap-3 text-blue-600">
                             <i class="fa-solid fa-file-invoice-dollar text-3xl"></i>
@@ -40,7 +35,6 @@
                         </div>
                     </div>
 
-                    {# Navigation #}
                     <nav class="flex-1 px-6 space-y-2">
                         <a href="{{ path('app_dashboard') }}" class="flex items-center gap-4 px-4 py-3 {{ app.request.attributes.get('_route') == 'app_dashboard' ? 'bg-blue-50 text-blue-600' : 'text-gray-400 hover:text-gray-900' }} rounded-xl font-bold text-sm transition-all">
                             <i class="fa-solid fa-chart-pie"></i> Dashboard
@@ -59,14 +53,13 @@
                         </a>
                     </nav>
 
-                    {# Pied de page Sidebar (Profil utilisateur) #}
                     <div class="p-6 border-t border-gray-100 flex flex-col gap-5">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm uppercase shrink-0">
                                 {{ app.user.firstName|first }}{{ app.user.lastName|first }}
                             </div>
                             <div class="flex-1 overflow-hidden">
-                                <p class="text-[14px] font-bold text-gray-900 truncate">{{ app.user.companyName }}</p>
+                                <p class="text-[14px] font-bold text-gray-900 truncate">{{ app.user.firstName }} {{app.user.lastName}}</p>
                                 <p class="text-[12px] text-gray-500 truncate">{{ app.user.email }}</p>
                             </div>
                         </div>
@@ -77,15 +70,12 @@
 
                 </aside>
 
-                {# Conteneur principal avec marge à gauche pour la Sidebar #}
                 <main class="flex-1 ml-72 p-12">
                     <div class="max-w-6xl mx-auto">
         {% endif %}
 
-        {# --- 2. LE BLOC D'INJECTION UNIQUE --- #}
         {% block body %}{% endblock %}
 
-        {# --- 3. FERMETURE DE LA STRUCTURE (Uniquement si connecté) --- #}
         {% if app.user %}
                     </div>
                 </main>
