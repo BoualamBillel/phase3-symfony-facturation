@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}FacturSaas{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        
         {% block stylesheets %}
         {% endblock %}
 
@@ -18,7 +21,66 @@
         <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
         {% endif %}
     </head>
-    <body>
+    <body class="bg-[#F8F9FB] font-sans text-gray-900">
+        
+        {% if app.user %}
+            <div class="min-h-screen flex">
+                
+                <aside class="w-72 bg-white border-r border-gray-100 flex flex-col fixed h-full z-10">
+                    
+                    <div class="p-8">
+                        <div class="flex items-center gap-3 text-blue-600">
+                            <i class="fa-solid fa-file-invoice-dollar text-3xl"></i>
+                            <span class="text-2xl font-black tracking-tighter text-gray-900">Factur<span class="text-blue-600">SaaS</span></span>
+                        </div>
+                    </div>
+
+                    <nav class="flex-1 px-6 space-y-2">
+                        <a href="{{ path('app_dashboard') }}" class="flex items-center gap-4 px-4 py-3 {{ app.request.attributes.get('_route') == 'app_dashboard' ? 'bg-blue-50 text-blue-600' : 'text-gray-400 hover:text-gray-900' }} rounded-xl font-bold text-sm transition-all">
+                            <i class="fa-solid fa-chart-pie"></i> Dashboard
+                        </a>
+                        <a href="#" class="flex items-center gap-4 px-4 py-3 text-gray-400 hover:text-gray-900 hover:bg-gray-50 rounded-xl font-medium text-sm transition-all">
+                            <i class="fa-solid fa-file-invoice"></i> Factures
+                        </a>
+                        <a href="#" class="flex items-center gap-4 px-4 py-3 text-gray-400 hover:text-gray-900 hover:bg-gray-50 rounded-xl font-medium text-sm transition-all">
+                            <i class="fa-solid fa-users"></i> Clients
+                        </a>
+                        <a href="#" class="flex items-center gap-4 px-4 py-3 text-gray-400 hover:text-gray-900 hover:bg-gray-50 rounded-xl font-medium text-sm transition-all">
+                            <i class="fa-solid fa-box"></i> Produits
+                        </a>
+                        <a href="#" class="flex items-center gap-4 px-4 py-3 text-gray-400 hover:text-gray-900 hover:bg-gray-50 rounded-xl font-medium text-sm transition-all">
+                            <i class="fa-solid fa-user"></i> Profil
+                        </a>
+                    </nav>
+
+                    <div class="p-6 border-t border-gray-100 flex flex-col gap-5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm uppercase shrink-0">
+                                {{ app.user.firstName|first }}{{ app.user.lastName|first }}
+                            </div>
+                            <div class="flex-1 overflow-hidden">
+                                <p class="text-[14px] font-bold text-gray-900 truncate">{{ app.user.firstName }} {{app.user.lastName}}</p>
+                                <p class="text-[12px] text-gray-500 truncate">{{ app.user.email }}</p>
+                            </div>
+                        </div>
+                        <a href="{{ path('app_logout') }}" class="flex items-center gap-3 text-red-600 font-medium text-[14px] hover:translate-x-1 transition-transform">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i> Déconnexion
+                        </a>
+                    </div>
+
+                </aside>
+
+                <main class="flex-1 ml-72 p-12">
+                    <div class="max-w-6xl mx-auto">
+        {% endif %}
+
         {% block body %}{% endblock %}
+
+        {% if app.user %}
+                    </div>
+                </main>
+            </div>
+        {% endif %}
+
     </body>
 </html>
