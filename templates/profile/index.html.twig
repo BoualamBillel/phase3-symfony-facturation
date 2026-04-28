@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil | FacturSaas{% endblock %}
+
+{% block body %}
+    <header class="mb-8">
+        <h1 class="text-[28px] font-bold text-gray-900 tracking-tight">Mon Profil</h1>
+    </header>
+
+    <div class="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm max-w-3xl">
+        
+
+        {% for message in app.flashes('success') %}
+            <div class="mb-8 p-4 bg-emerald-50 text-emerald-700 rounded-xl border border-emerald-100 flex items-center gap-3 font-medium text-sm">
+                <i class="fa-solid fa-circle-check text-lg"></i>
+                {{ message }}
+            </div>
+        {% endfor %}
+
+
+        {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+            
+            <div>
+                {{ form_label(form.companyName, null, {'label_attr': {'class': 'block text-[14px] font-medium text-gray-700 mb-1.5'}}) }}
+                {{ form_widget(form.companyName, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-4 py-2.5 text-[15px] focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all shadow-sm'}}) }}
+                <div class="text-red-500 text-[13px] mt-1 font-medium">{{ form_errors(form.companyName) }}</div>
+                <p class="text-[13px] text-gray-500 mt-1.5">Le nom de votre entreprise qui apparaîtra sur vos factures.</p>
+            </div>
+
+            <div>
+                {{ form_label(form.siret, null, {'label_attr': {'class': 'block text-[14px] font-medium text-gray-700 mb-1.5'}}) }}
+                {{ form_widget(form.siret, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-4 py-2.5 text-[15px] focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all shadow-sm'}}) }}
+                <div class="text-red-500 text-[13px] mt-1 font-medium">{{ form_errors(form.siret) }}</div>
+            </div>
+
+            <div>
+                {{ form_label(form.iban, null, {'label_attr': {'class': 'block text-[14px] font-medium text-gray-700 mb-1.5'}}) }}
+                {{ form_widget(form.iban, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-4 py-2.5 text-[15px] font-mono tracking-wide focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all shadow-sm'}}) }}
+                <div class="text-red-500 text-[13px] mt-1 font-medium">{{ form_errors(form.iban) }}</div>
+                <p class="text-[13px] text-gray-500 mt-1.5">Compte bancaire qui recevra les virements de vos clients.</p>
+            </div>
+
+            <div>
+                {{ form_label(form.cgv, null, {'label_attr': {'class': 'block text-[14px] font-medium text-gray-700 mb-1.5'}}) }}
+                {{ form_widget(form.cgv, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-4 py-3 text-[15px] focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all shadow-sm resize-y min-h-[120px]'}}) }}
+                <div class="text-red-500 text-[13px] mt-1 font-medium">{{ form_errors(form.cgv) }}</div>
+            </div>
+
+            <div class="pt-2">
+                <button type="submit" class="bg-[#2563EB] hover:bg-blue-700 text-white text-[15px] font-medium py-2.5 px-6 rounded-lg transition-colors shadow-sm">
+                    Enregistrer les modifications
+                </button>
+            </div>
+
+        {{ form_end(form) }}
+
+    </div>
+{% endblock %}

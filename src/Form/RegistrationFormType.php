@@ -21,6 +21,7 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('firstName', TextType::class, [
                 'attr' => ['placeholder' => '...'],
+                'empty_data' => '',
                 'constraints' => [
                     new NotBlank(
                         message: 'Veuillez renseigner votre prénom.',
@@ -33,6 +34,7 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('lastName', TextType::class, [
                 'attr' => ['placeholder' => '...'],
+                'empty_data' => '',
                 'constraints' => [
                     new NotBlank(
                         message: 'Veuillez renseigner votre nom.',
@@ -45,6 +47,7 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('companyName', TextType::class, [
                 'attr' => ['placeholder' => 'Tech Solutions'],
+                'empty_data' => '',
                 'constraints' => [
                     new NotBlank(
                         message: 'Veuillez renseigner votre raison sociale.',
@@ -57,6 +60,7 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('iban', TextType::class, [
                 'attr' => ['placeholder' => 'FR76 1234 5678 9012 3456 7890 123'],
+                'empty_data' => '',
                 'constraints' => [
                     new NotBlank(
                         message: 'Veuillez renseigner l\'IBAN de votre entreprise.',
@@ -68,6 +72,7 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('email', EmailType::class, [
                 'attr' => ['placeholder' => 'contact@entreprise.fr'],
+                'empty_data' => '',
                 'constraints' => [
                     new NotBlank(
                         message: 'Veuillez renseigner votre adresse email.',
