@@ -1,0 +1,125 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Produits | FacturSaas{% endblock %}
+
+{% block body %}
+
+<div class="mb-16">
+    <h2 class="text-center text-[22px] font-bold text-gray-700 tracking-wide uppercase mb-6">Ajouter un nouveau produit
+    </h2>
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 max-w-2xl mx-auto p-6 relative">
+
+        <button type="button" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+            <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+
+        <h3 class="text-lg font-bold text-gray-900 mb-6">Nouveau produit</h3>
+
+        {{ form_start(form, {'attr': {'class': 'space-y-5'}}) }}
+
+        <div>
+            {{ form_label(form.name, 'Nom', {'label_attr': {'class': 'block text-[13px] font-medium text-gray-600
+            mb-1.5'}}) }}
+            {{ form_widget(form.name, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px]
+            focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all'}}) }}
+        </div>
+
+        <div>
+            {{ form_label(form.description, 'Description', {'label_attr': {'class': 'block text-[13px] font-medium
+            text-gray-600 mb-1.5'}}) }}
+            {{ form_widget(form.description, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-3 py-2
+            text-[14px] focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all resize-y
+            min-h-[80px]'}}) }}
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                {{ form_label(form.price, 'Prix', {'label_attr': {'class': 'block text-[13px] font-medium text-gray-600
+                mb-1.5'}}) }}
+                {{ form_widget(form.price, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-3 py-2
+                text-[14px] focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all'}}) }}
+            </div>
+            <div>
+                {{ form_label(form.unit, 'Unité', {'label_attr': {'class': 'block text-[13px] font-medium text-gray-600
+                mb-1.5'}}) }}
+                {{ form_widget(form.unit, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-3 py-2
+                text-[14px] focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all
+                bg-white'}}) }}
+            </div>
+        </div>
+
+        <div class="pt-4 flex justify-end gap-3">
+            <a href="{{ path('app_product_index') }}"
+                class="px-5 py-2.5 rounded-lg border border-gray-300 text-gray-700 text-[14px] font-medium hover:bg-gray-50 transition-colors">
+                Annuler
+            </a>
+            <button type="submit"
+                class="bg-[#2563EB] hover:bg-blue-700 text-white text-[14px] font-medium py-2.5 px-6 rounded-lg transition-colors">
+                Enregistrer
+            </button>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+
+<div>
+    <h2 class="text-center text-[22px] font-bold text-gray-700 mb-6">Produits & Services existant</h2>
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden max-w-5xl mx-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-gray-200 text-gray-900 text-[13px] font-bold">
+                    <th class="px-6 py-4">Nom</th>
+                    <th class="px-6 py-4">Description</th>
+                    <th class="px-6 py-4">Prix unitaire</th>
+                    <th class="px-6 py-4 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% set unit_translations = {
+                'piece': 'pièce',
+                'hour': 'heure',
+                'day': 'jour',
+                'month': 'mois',
+                'year': 'an'
+                } %}
+
+                {% for product in products %}
+                <tr class="hover:bg-gray-50 transition-colors group">
+                    <td class="px-6 py-4 text-[14px] text-gray-900">{{ product.name }}</td>
+                    <td class="px-6 py-4 text-[14px] text-gray-500 max-w-md truncate">{{ product.description }}</td>
+                    <td class="px-6 py-4 text-[14px] text-gray-900">
+                        {{ product.price|number_format(0, ',', ' ') }} € / {{
+                        unit_translations[product.unit]|default(product.unit) }}
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <div
+                            class="flex items-center justify-end gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <a href="#" class="text-blue-500 hover:text-blue-700 transition-colors">
+                                <i class="fa-solid fa-pen"></i>
+                            </a>
+                            <form method="post" action="#"
+                                onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');"
+                                class="inline-block">
+                                <button type="submit" class="text-red-500 hover:text-red-700 transition-colors">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="px-6 py-8 text-center text-gray-500 text-sm">
+                        Aucun produit dans votre catalogue pour le moment.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
