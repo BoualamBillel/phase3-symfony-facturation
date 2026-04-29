@@ -20,7 +20,7 @@ class InvoiceLineType extends AbstractType
         $builder
             ->add('productName', TextType::class, [
                 'label' => 'Prestation',
-                'constraints' => [new NotBlank(['message' => 'Veuillez saisir un nom.'])]
+                'constraints' => [new NotBlank(message: 'Veuillez saisir un nom.')]
             ])
             ->add('unitPrice', NumberType::class, [
                 'label' => 'Prix unitaire (HT)',
@@ -28,17 +28,17 @@ class InvoiceLineType extends AbstractType
                 'html5' => true,
                 'attr' => ['step' => '0.01', 'min' => '0'],
                 'constraints' => [
-                    new NotBlank(), 
-                    new PositiveOrZero(['message' => 'Le prix ne peut pas être négatif.'])
+                    new NotBlank(),
+                    new PositiveOrZero(message: 'Le prix ne peut pas être négatif.')
                 ]
             ])
             ->add('quantity', IntegerType::class, [
                 'label' => 'Quantité',
-                'data' => 1, 
+                'data' => 1,
                 'attr' => ['min' => '1'],
                 'constraints' => [
-                    new NotBlank(), 
-                    new Positive(['message' => 'La quantité doit être supérieure à 0.'])
+                    new NotBlank(),
+                    new Positive(message: 'La quantité doit être supérieure à 0.')
                 ]
             ])
         ;

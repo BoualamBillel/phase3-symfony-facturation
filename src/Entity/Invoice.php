@@ -34,12 +34,19 @@ class Invoice
     /**
      * @var Collection<int, InvoiceLine>
      */
-    #[ORM\OneToMany(targetEntity: InvoiceLine::class, mappedBy: 'invoice')]
+    #[ORM\OneToMany(targetEntity: InvoiceLine::class, mappedBy: 'invoice', cascade: ['persist'], orphanRemoval: true)]
     private Collection $invoiceLines;
+
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    private ?\DateTimeImmutable $invoiceDate = null;
+
+    #[ORM\ManyToOne(inversedBy: 'invoices')]
+    private ?Client $client = null;
 
     public function __construct()
     {
         $this->invoiceLines = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -133,6 +140,30 @@ class Invoice
                 $invoiceLine->setInvoice(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getInvoiceDate(): ?\DateTimeImmutable
+    {
+        return $this->invoiceDate;
+    }
+
+    public function setInvoiceDate(\DateTimeImmutable $invoiceDate): static
+    {
+        $this->invoiceDate = $invoiceDate;
+
+        return $this;
+    }
+
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(?Client $client): static
+    {
+        $this->client = $client;
 
         return $this;
     }
