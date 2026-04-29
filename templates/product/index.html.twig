@@ -91,22 +91,60 @@
                     <td class="px-6 py-4 text-[14px] text-gray-900">{{ product.name }}</td>
                     <td class="px-6 py-4 text-[14px] text-gray-500 max-w-md truncate">{{ product.description }}</td>
                     <td class="px-6 py-4 text-[14px] text-gray-900">
-                        {{ product.price|number_format(0, ',', ' ') }} € / {{
+                        {{ product.price|number_format(2, ',', ' ') }} € / {{
                         unit_translations[product.unit]|default(product.unit) }}
                     </td>
                     <td class="px-6 py-4 text-right">
                         <div
                             class="flex items-center justify-end gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <a href="#" class="text-blue-500 hover:text-blue-700 transition-colors">
+
+                            <a href="{{ path('app_product_edit', {'id': product.id}) }}"
+                                class="text-blue-500 hover:text-blue-700 transition-colors" title="Modifier">
                                 <i class="fa-solid fa-pen"></i>
                             </a>
-                            <form method="post" action="#"
-                                onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');"
-                                class="inline-block">
-                                <button type="submit" class="text-red-500 hover:text-red-700 transition-colors">
-                                    <i class="fa-solid fa-trash-can"></i>
-                                </button>
-                            </form>
+
+                            <button type="button"
+                                onclick="document.getElementById('delete-modal-{{ product.id }}').showModal()"
+                                class="text-red-500 hover:text-red-700 transition-colors" title="Supprimer">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+
+                            <dialog id="delete-modal-{{ product.id }}"
+                                class="bg-transparent p-0 backdrop:bg-gray-900/40 backdrop:backdrop-blur-sm rounded-xl m-auto open:animate-in open:fade-in open:zoom-in-95 duration-200">
+                                <div
+                                    class="bg-white rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl border border-gray-100">
+
+                                    <div
+                                        class="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center mx-auto mb-4">
+                                        <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                                    </div>
+
+                                    <h3 class="text-lg font-bold text-gray-900 mb-2">Supprimer la prestation</h3>
+                                    <p class="text-[14px] text-gray-500 mb-6">Êtes-vous sûr de vouloir supprimer
+                                        <strong>{{ product.name }}</strong> ? Cette action est irréversible.
+                                    </p>
+
+                                    <div class="flex gap-3 w-full">
+                                        <button type="button" onclick="this.closest('dialog').close()"
+                                            class="flex-1 px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-700 text-[14px] font-medium hover:bg-gray-50 transition-colors">
+                                            Annuler
+                                        </button>
+
+                                        <form method="post"
+                                            action="{{ path('app_product_delete', {'id': product.id}) }}"
+                                            class="flex-1 m-0">
+                                            <input type="hidden" name="_token"
+                                                value="{{ csrf_token('delete' ~ product.id) }}">
+                                            <button type="submit"
+                                                class="w-full px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-[14px] font-medium transition-colors shadow-sm">
+                                                Supprimer
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </dialog>
+
                         </div>
                     </td>
                 </tr>

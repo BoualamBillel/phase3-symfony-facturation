@@ -42,4 +42,51 @@ final class ProductController extends AbstractController
             'products' => $products,
         ]);
     }
+
+    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
+    public function update(Request $request, Product $product, EntityManagerInterface $em): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        if ($product->getOwner() !== $this->getUser()) {
+            throw $this->createAccessDeniedException('Ce produit ne vous appartient pas.');
+        }
+
+        $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+
+            $this->addFlash('success', 'Le produit a été modifié avec succès.');
+
+            return $this->redirectToRoute('app_product_index');
+        }
+
+        return $this->render('product/edit.html.twig', [
+            'form' => $form->createView(),
+            'product' => $product,
+        ]);
+    }
+
+    #[Route('/{id}/delete', name: 'delete', methods: ['POST'])]
+    public function delete(Request $request, Product $product, EntityManagerInterface $em): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        if ($product->getOwner() !== $this->getUser()) {
+            throw $this->createAccessDeniedException('Ce produit ne vous appartient pas.');
+        }
+
+        if ($this->isCsrfTokenValid('delete' . $product->getId(), $request->getPayload()->getString('_token'))) {
+            $em->remove($product);
+            $em->flush();
+
+            $this->addFlash('success', 'Le produit a été supprimé de votre catalogue.');
+        } else {
+            $this->addFlash('error', 'Jeton de sécurité invalide, impossible de supprimer le produit.');
+        }
+
+        return $this->redirectToRoute('app_product_index');
+    }
 }
