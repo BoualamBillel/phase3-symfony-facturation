@@ -3,154 +3,171 @@
 {% block title %}Clients | FacturSaas{% endblock %}
 
 {% block body %}
-    
-    {# --- SECTION 1 : LE FORMULAIRE D'AJOUT --- #}
-    <div class="mb-16">
-        <h2 class="text-center text-[22px] font-bold text-gray-700 tracking-wide uppercase mb-6">Ajouter un nouveau client</h2>
-        
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 max-w-2xl mx-auto p-6 relative">
-            
-            <button type="button" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
 
-            <h3 class="text-lg font-bold text-gray-900 mb-6">Nouveau client</h3>
+<div class="mb-16">
+    <h2 class="text-center text-[22px] font-bold text-gray-700 tracking-wide uppercase mb-6">Ajouter un nouveau client
+    </h2>
 
-            {{ form_start(form, {'attr': {'class': 'space-y-5'}}) }}
-                
-                {# Nom de l'entreprise #}
-                <div>
-                    {{ form_label(form.name, 'Nom du client / Entreprise', {'label_attr': {'class': 'block text-[13px] font-medium text-gray-600 mb-1.5'}}) }}
-                    {{ form_widget(form.name, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all'}}) }}
-                </div>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 max-w-2xl mx-auto p-6 relative">
 
-                {# Ligne 2 : Email & Téléphone #}
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        {{ form_label(form.email, 'Email', {'label_attr': {'class': 'block text-[13px] font-medium text-gray-600 mb-1.5'}}) }}
-                        {{ form_widget(form.email, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all'}}) }}
-                    </div>
-                    <div>
-                        {{ form_label(form.phone, 'Téléphone', {'label_attr': {'class': 'block text-[13px] font-medium text-gray-600 mb-1.5'}}) }}
-                        {{ form_widget(form.phone, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-white'}}) }}
-                    </div>
-                </div>
+        <button type="button" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors">
+            <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
 
-                {# Adresse #}
-                <div>
-                    {{ form_label(form.address, 'Adresse', {'label_attr': {'class': 'block text-[13px] font-medium text-gray-600 mb-1.5'}}) }}
-                    {{ form_widget(form.address, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all resize-y min-h-[80px]'}}) }}
-                </div>
+        <h3 class="text-lg font-bold text-gray-900 mb-6">Nouveau client</h3>
 
-                {# Ligne 4 : SIRET & RIB #}
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        {{ form_label(form.siret, 'SIRET (Optionnel)', {'label_attr': {'class': 'block text-[13px] font-medium text-gray-600 mb-1.5'}}) }}
-                        {{ form_widget(form.siret, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all'}}) }}
-                    </div>
-                    <div>
-                        {{ form_label(form.rib, 'RIB (Optionnel)', {'label_attr': {'class': 'block text-[13px] font-medium text-gray-600 mb-1.5'}}) }}
-                        {{ form_widget(form.rib, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-white'}}) }}
-                    </div>
-                </div>
+        {{ form_start(form, {'attr': {'class': 'space-y-5'}}) }}
 
-                {# Boutons #}
-                <div class="pt-4 flex justify-end gap-3">
-                    <a href="{{ path('app_client_index') }}" class="px-5 py-2.5 rounded-lg border border-gray-300 text-gray-700 text-[14px] font-medium hover:bg-gray-50 transition-colors">
-                        Annuler
-                    </a>
-                    <button type="submit" class="bg-[#2563EB] hover:bg-blue-700 text-white text-[14px] font-medium py-2.5 px-6 rounded-lg transition-colors">
-                        Enregistrer
-                    </button>
-                </div>
-
-            {{ form_end(form) }}
+        <div>
+            {{ form_label(form.name, 'Nom du client / Entreprise', {'label_attr': {'class': 'block text-[13px]
+            font-medium text-gray-600 mb-1.5'}}) }}
+            {{ form_widget(form.name, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px]
+            focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all'}}) }}
         </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                {{ form_label(form.email, 'Email', {'label_attr': {'class': 'block text-[13px] font-medium text-gray-600
+                mb-1.5'}}) }}
+                {{ form_widget(form.email, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-3 py-2
+                text-[14px] focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all'}}) }}
+            </div>
+            <div>
+                {{ form_label(form.phone, 'Téléphone', {'label_attr': {'class': 'block text-[13px] font-medium
+                text-gray-600 mb-1.5'}}) }}
+                {{ form_widget(form.phone, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-3 py-2
+                text-[14px] focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all
+                bg-white'}}) }}
+            </div>
+        </div>
+
+        <div>
+            {{ form_label(form.address, 'Adresse', {'label_attr': {'class': 'block text-[13px] font-medium text-gray-600
+            mb-1.5'}}) }}
+            {{ form_widget(form.address, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-3 py-2
+            text-[14px] focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all resize-y
+            min-h-[80px]'}}) }}
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                {{ form_label(form.siret, 'SIRET (Optionnel)', {'label_attr': {'class': 'block text-[13px] font-medium
+                text-gray-600 mb-1.5'}}) }}
+                {{ form_widget(form.siret, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-3 py-2
+                text-[14px] focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all'}}) }}
+            </div>
+            <div>
+                {{ form_label(form.rib, 'RIB (Optionnel)', {'label_attr': {'class': 'block text-[13px] font-medium
+                text-gray-600 mb-1.5'}}) }}
+                {{ form_widget(form.rib, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-3 py-2
+                text-[14px] focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all
+                bg-white'}}) }}
+            </div>
+        </div>
+
+        <div class="pt-4 flex justify-end gap-3">
+            <a href="{{ path('app_client_index') }}"
+                class="px-5 py-2.5 rounded-lg border border-gray-300 text-gray-700 text-[14px] font-medium hover:bg-gray-50 transition-colors">
+                Annuler
+            </a>
+            <button type="submit"
+                class="bg-[#2563EB] hover:bg-blue-700 text-white text-[14px] font-medium py-2.5 px-6 rounded-lg transition-colors">
+                Enregistrer
+            </button>
+        </div>
+
+        {{ form_end(form) }}
     </div>
+</div>
 
-    {# --- SECTION 2 : LE TABLEAU DE BORD --- #}
-    <div>
-        <h2 class="text-center text-[22px] font-bold text-gray-700 mb-6">Clients existants</h2>
-        
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden max-w-5xl mx-auto">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="border-b border-gray-200 text-gray-900 text-[13px] font-bold">
-                        <th class="px-6 py-4">Nom</th>
-                        <th class="px-6 py-4">Contact</th>
-                        <th class="px-6 py-4">Adresse</th>
-                        <th class="px-6 py-4 text-right">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100">
-                    {% for client in clients %}
-                        <tr class="hover:bg-gray-50 transition-colors group">
-                            <td class="px-6 py-4 text-[14px] text-gray-900">{{ client.name }}</td>
-                            
-                            {# Cellule Contact : Fusion Email + Téléphone #}
-                            <td class="px-6 py-4 text-[13px]">
-                                <div class="text-gray-900">{{ client.email }}</div>
-                                {% if client.phone %}
-                                    <div class="text-gray-500 mt-0.5">{{ client.phone }}</div>
-                                {% endif %}
-                            </td>
-                            
-                            <td class="px-6 py-4 text-[14px] text-gray-500">{{ client.address }}</td>
-                            
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex items-center justify-end gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    
-                                    {# Note : Il faudra créer la route app_client_edit dans ton controller ! #}
-                                    <a href="#" class="text-blue-500 hover:text-blue-700 transition-colors" title="Modifier">
-                                        <i class="fa-solid fa-pen"></i>
-                                    </a>
-                                    
-                                    {# Bouton d'ouverture de la modale #}
-                                    <button type="button" onclick="document.getElementById('delete-modal-client-{{ client.id }}').showModal()" class="text-red-500 hover:text-red-700 transition-colors" title="Supprimer">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                    </button>
+<div>
+    <h2 class="text-center text-[22px] font-bold text-gray-700 mb-6">Clients existants</h2>
 
-                                    {# Modale de suppression native #}
-                                    <dialog id="delete-modal-client-{{ client.id }}" class="bg-transparent p-0 backdrop:bg-gray-900/40 backdrop:backdrop-blur-sm rounded-xl m-auto open:animate-in open:fade-in open:zoom-in-95 duration-200 text-left">
-                                        <div class="bg-white rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl border border-gray-100">
-                                            
-                                            <div class="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center mx-auto mb-4">
-                                                <i class="fa-solid fa-triangle-exclamation text-xl"></i>
-                                            </div>
-                                            
-                                            <h3 class="text-lg font-bold text-gray-900 mb-2">Supprimer le client</h3>
-                                            <p class="text-[14px] text-gray-500 mb-6">Êtes-vous sûr de vouloir supprimer <strong>{{ client.name }}</strong> de votre répertoire ?</p>
-                                            
-                                            <div class="flex gap-3 w-full">
-                                                <button type="button" onclick="this.closest('dialog').close()" class="flex-1 px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-700 text-[14px] font-medium hover:bg-gray-50 transition-colors">
-                                                    Annuler
-                                                </button>
-                                                
-                                                {# Note : Il faudra créer la route app_client_delete dans ton controller ! #}
-                                                <form method="post" action="#" class="flex-1 m-0">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ client.id) }}">
-                                                    <button type="submit" class="w-full px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-[14px] font-medium transition-colors shadow-sm">
-                                                        Supprimer
-                                                    </button>
-                                                </form>
-                                            </div>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden max-w-5xl mx-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-gray-200 text-gray-900 text-[13px] font-bold">
+                    <th class="px-6 py-4">Nom</th>
+                    <th class="px-6 py-4">Contact</th>
+                    <th class="px-6 py-4">Adresse</th>
+                    <th class="px-6 py-4 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for client in clients %}
+                <tr class="hover:bg-gray-50 transition-colors group">
+                    <td class="px-6 py-4 text-[14px] text-gray-900">{{ client.name }}</td>
 
-                                        </div>
-                                    </dialog>
+                    <td class="px-6 py-4 text-[13px]">
+                        <div class="text-gray-900">{{ client.email }}</div>
+                        {% if client.phone %}
+                        <div class="text-gray-500 mt-0.5">{{ client.phone }}</div>
+                        {% endif %}
+                    </td>
+
+                    <td class="px-6 py-4 text-[14px] text-gray-500">{{ client.address }}</td>
+
+                    <td class="px-6 py-4 text-right">
+                        <div
+                            class="flex items-center justify-end gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+
+                            <a href="{{ path('app_client_edit', {'id': client.id})}}"
+                                class="text-blue-500 hover:text-blue-700 transition-colors" title="Modifier">
+                                <i class="fa-solid fa-pen"></i>
+                            </a>
+
+                            <button type="button"
+                                onclick="document.getElementById('delete-modal-client-{{ client.id }}').showModal()"
+                                class="text-red-500 hover:text-red-700 transition-colors" title="Supprimer">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+
+                            <dialog id="delete-modal-client-{{ client.id }}"
+                                class="bg-transparent p-0 backdrop:bg-gray-900/40 backdrop:backdrop-blur-sm rounded-xl m-auto open:animate-in open:fade-in open:zoom-in-95 duration-200 text-left">
+                                <div
+                                    class="bg-white rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl border border-gray-100">
+
+                                    <div
+                                        class="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center mx-auto mb-4">
+                                        <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                                    </div>
+
+                                    <h3 class="text-lg font-bold text-gray-900 mb-2">Supprimer le client</h3>
+                                    <p class="text-[14px] text-gray-500 mb-6">Êtes-vous sûr de vouloir supprimer
+                                        <strong>{{ client.name }}</strong> de votre répertoire ?</p>
+
+                                    <div class="flex gap-3 w-full">
+                                        <button type="button" onclick="this.closest('dialog').close()"
+                                            class="flex-1 px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-700 text-[14px] font-medium hover:bg-gray-50 transition-colors">
+                                            Annuler
+                                        </button>
+
+                                        <form method="post" action="#" class="flex-1 m-0">
+                                            <input type="hidden" name="_token"
+                                                value="{{ csrf_token('delete' ~ client.id) }}">
+                                            <button type="submit"
+                                                class="w-full px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-[14px] font-medium transition-colors shadow-sm">
+                                                Supprimer
+                                            </button>
+                                        </form>
+                                    </div>
 
                                 </div>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="4" class="px-6 py-8 text-center text-gray-500 text-sm">
-                                Aucun client dans votre répertoire pour le moment.
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                            </dialog>
+
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="px-6 py-8 text-center text-gray-500 text-sm">
+                        Aucun client dans votre répertoire pour le moment.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+</div>
 
 {% endblock %}
