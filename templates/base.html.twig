@@ -32,11 +32,13 @@
         <aside class="w-72 bg-white border-r border-gray-100 flex flex-col fixed h-full z-10">
 
             <div class="p-8">
-                <div class="flex items-center gap-3 text-blue-600">
-                    <i class="fa-solid fa-file-invoice-dollar text-3xl"></i>
-                    <span class="text-2xl font-black tracking-tighter text-gray-900">Factur<span
-                            class="text-blue-600">SaaS</span></span>
-                </div>
+                <a href="{{ path('app_dashboard')}}">
+                    <div class="flex items-center gap-3 text-blue-600">
+                        <i class="fa-solid fa-file-invoice-dollar text-3xl"></i>
+                        <span class="text-2xl font-black tracking-tighter text-gray-900">Factur<span
+                                class="text-blue-600">SaaS</span></span>
+                    </div>
+                </a>
             </div>
 
             <nav class="flex-1 px-6 space-y-2">
@@ -52,7 +54,7 @@
                     class="flex items-center gap-4 px-4 py-3 text-gray-400 hover:text-gray-900 hover:bg-gray-50 rounded-xl font-medium text-sm transition-all">
                     <i class="fa-solid fa-users"></i> Clients
                 </a>
-                <a href="#"
+                <a href="{{ path('app_product_index')}}"
                     class="flex items-center gap-4 px-4 py-3 text-gray-400 hover:text-gray-900 hover:bg-gray-50 rounded-xl font-medium text-sm transition-all">
                     <i class="fa-solid fa-box"></i> Produits
                 </a>
