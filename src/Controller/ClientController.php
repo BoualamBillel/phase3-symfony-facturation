@@ -69,4 +69,25 @@ final class ClientController extends AbstractController
             'client' => $client
         ]);
     }
+
+    #[Route('{id}/delete', name: 'delete', methods: ['POST'])]
+    public function delete(Request $request, Client $client, EntityManagerInterface $em): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        if ($client->getOwner() !== $this->getUser()) {
+            throw $this->createAccessDeniedException('Ce client ne vous appartient pas.');
+        }
+
+        if ($this->isCsrfTokenValid('delete' . $client->getId(), $request->getPayload()->getString('_token'))) {
+            $em->remove($client);
+            $em->flush();
+
+            $this->addFlash('success', 'Le produit a été supprimé de votre catalogue.');
+        } else {
+            $this->addFlash('error', 'Jeton de sécurité invalide, impossible de supprimer le produit.');
+        }
+
+        return $this->redirectToRoute('app_client_index');
+    }
 }

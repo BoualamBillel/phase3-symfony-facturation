@@ -134,7 +134,8 @@
 
                                     <h3 class="text-lg font-bold text-gray-900 mb-2">Supprimer le client</h3>
                                     <p class="text-[14px] text-gray-500 mb-6">Êtes-vous sûr de vouloir supprimer
-                                        <strong>{{ client.name }}</strong> de votre répertoire ?</p>
+                                        <strong>{{ client.name }}</strong> de votre répertoire ?
+                                    </p>
 
                                     <div class="flex gap-3 w-full">
                                         <button type="button" onclick="this.closest('dialog').close()"
@@ -142,7 +143,8 @@
                                             Annuler
                                         </button>
 
-                                        <form method="post" action="#" class="flex-1 m-0">
+                                        <form method="post" action="{{ path('app_client_delete', {'id': client.id}) }}"
+                                            class="flex-1 m-0">
                                             <input type="hidden" name="_token"
                                                 value="{{ csrf_token('delete' ~ client.id) }}">
                                             <button type="submit"
