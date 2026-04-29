@@ -43,12 +43,14 @@ class ClientType extends AbstractType
                     )
                 ]
             ])
-            ->add('phone', NumberType::class, [
+            ->add('phone', TextType::class, [
                 'label' => 'Téléphone',
                 'required' => false,
                 'constraints' => [
                     new Length(
-                        max: 20,
+                        max: 10,
+                        min: 10,
+                        minMessage: 'Le numéro de téléphone doit comporter exactement {{ limit }} caractères.',
                         maxMessage: 'Le numéro de téléphone ne peut pas dépasser {{ limit }} caractères.'
                     )
                 ]
