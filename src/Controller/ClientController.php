@@ -13,8 +13,22 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/client', name: 'app_client_')]
 final class ClientController extends AbstractController
 {
-    #[Route(path: '/', name: 'index', methods: ['GET', 'POST'])]
-    public function index(Request $request, EntityManagerInterface $em): Response
+    #[Route(path: '/', name: 'index', methods: ['GET'])]
+    public function index(EntityManagerInterface $em): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $clients = $em->getRepository(Client::class)->findBy([
+            'owner' => $this->getUser(),
+        ]);
+
+        return $this->render('client/index.html.twig', [
+            'clients'=> $clients,
+        ]);
+    }
+
+    #[Route(path: '/add', name: 'add', methods: ['GET', 'POST'])]
+    public function add(Request $request, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
@@ -29,7 +43,7 @@ final class ClientController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Le client a bien été ajouté.');
-            return $this->redirectToRoute('app_client_index');
+            return $this->redirectToRoute('app_client_add');
         }
 
         $clients = $em->getRepository(Client::class)->findBy([
@@ -38,7 +52,7 @@ final class ClientController extends AbstractController
 
 
 
-        return $this->render('client/index.html.twig', [
+        return $this->render('client/add.html.twig', [
             'form' => $form->createView(),
             'clients' => $clients
         ]);
