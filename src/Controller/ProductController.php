@@ -13,8 +13,23 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/product', name: 'app_product_')]
 final class ProductController extends AbstractController
 {
-    #[Route('/', name: 'index', methods: ['GET', 'POST'])]
-    public function index(Request $request, EntityManagerInterface $em): Response
+    #[Route(path:'/', name:'index', methods: ['GET'])]
+    public function index(EntityManagerInterface $em)
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $products = $em->getRepository(Product::class)->findBy([
+            'owner' => $this->getUser(),
+        ]);
+
+        return $this->render('product/index.html.twig', [
+            'products'=> $products,
+        ]);
+
+    }
+
+    #[Route('/add', name: 'add', methods: ['GET', 'POST'])]
+    public function add(Request $request, EntityManagerInterface $em): Response
     {
 
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -37,7 +52,7 @@ final class ProductController extends AbstractController
             'owner' => $this->getUser(),
         ]);
 
-        return $this->render('product/index.html.twig', [
+        return $this->render('product/add.html.twig', [
             'form' => $form->createView(),
             'products' => $products,
         ]);
