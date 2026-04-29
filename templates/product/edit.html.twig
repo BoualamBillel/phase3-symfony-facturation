@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier {{ product.name }} | FacturSaas{% endblock %}
+
+{% block body %}
+
+    <div class="min-h-[calc(100vh-8rem)] flex items-center justify-center py-8">
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 w-full max-w-2xl p-8 relative">
+
+            <a href="{{ path('app_product_index') }}" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition-colors" title="Fermer">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </a>
+
+            <div class="mb-8">
+                <h1 class="text-xl font-bold text-gray-900 tracking-tight">Produit - {{ product.name }}</h1>
+                <p class="text-[14px] text-gray-500 mt-1 font-medium">Modifier un produit</p>
+            </div>
+
+            {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+                
+                <div>
+                    {{ form_label(form.name, 'Nom', {'label_attr': {'class': 'block text-[13px] font-medium text-gray-600 mb-1.5'}}) }}
+                    {{ form_widget(form.name, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-4 py-2.5 text-[14px] focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all shadow-sm'}}) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.description, 'Description', {'label_attr': {'class': 'block text-[13px] font-medium text-gray-600 mb-1.5'}}) }}
+                    {{ form_widget(form.description, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-4 py-3 text-[14px] focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all resize-y min-h-[100px] shadow-sm'}}) }}
+                </div>
+
+                <div class="grid grid-cols-2 gap-5">
+                    <div>
+                        {{ form_label(form.price, 'Prix', {'label_attr': {'class': 'block text-[13px] font-medium text-gray-600 mb-1.5'}}) }}
+                        {{ form_widget(form.price, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-4 py-2.5 text-[14px] focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all shadow-sm'}}) }}
+                    </div>
+                    <div>
+                        {{ form_label(form.unit, 'Unité', {'label_attr': {'class': 'block text-[13px] font-medium text-gray-600 mb-1.5'}}) }}
+                        {{ form_widget(form.unit, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-4 py-2.5 text-[14px] focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-white shadow-sm'}}) }}
+                    </div>
+                </div>
+
+                <div class="pt-4 flex justify-end gap-3 mt-4">
+                    <a href="{{ path('app_product_index') }}" class="px-5 py-2.5 rounded-lg border border-gray-300 text-gray-700 text-[14px] font-medium hover:bg-gray-50 transition-colors shadow-sm">
+                        Annuler
+                    </a>
+                    <button type="submit" class="bg-[#2563EB] hover:bg-blue-700 text-white text-[14px] font-medium py-2.5 px-6 rounded-lg transition-colors shadow-sm">
+                        Enregistrer
+                    </button>
+                </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
