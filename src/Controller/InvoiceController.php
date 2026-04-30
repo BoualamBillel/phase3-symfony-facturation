@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\PdfGenerator;
 use App\Entity\Client;
 use App\Entity\Invoice;
 use App\Entity\Product;
@@ -258,5 +259,30 @@ final class InvoiceController extends AbstractController
         $this->addFlash('info', 'Fonctionnalité d\'envoi par email en cours de développement.');
 
         return $this->redirectToRoute('app_invoice_show', ['id' => $invoice->getId()]);
+    }
+
+    #[Route('/{id}/pdf', name: 'pdf', methods: ['GET'], requirements: ['id' => '\d+'])]
+    public function downloadPdf(Invoice $invoice, PdfGenerator $pdfGenerator): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        if ($invoice->getOwner() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+
+        if ($invoice->getStatus() === 'draft') {
+            $this->addFlash('error', 'Vous devez valider la facture avant de générer le PDF.');
+            return $this->redirectToRoute('app_invoice_show', ['id' => $invoice->getId()]);
+        }
+
+        $pdfContent = $pdfGenerator->generateFromTwig('invoice/pdf.html.twig', [
+            'invoice'=> $invoice,
+            'app' => ['user' => $this->getUser()]
+        ]);
+
+        return new Response($pdfContent, 200, [
+            'Content-Type'=> 'application/pdf',
+            'Content-Disposition' => 'inline; filename="Facture_' . $invoice->getNumber() . '.pdf"',
+        ]);
     }
 }

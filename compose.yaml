@@ -1,6 +1,5 @@
-
 services:
-###> doctrine/doctrine-bundle ###
+  ###> doctrine/doctrine-bundle ###
   database:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
     environment:
@@ -11,7 +10,7 @@ services:
     ports:
       - '5432:5432'
     healthcheck:
-      test: ["CMD", "pg_isready", "-d", "${POSTGRES_DB:-app}", "-U", "${POSTGRES_USER:-app}"]
+      test: [ "CMD", "pg_isready", "-d", "${POSTGRES_DB:-app}", "-U", "${POSTGRES_USER:-app}" ]
       timeout: 5s
       retries: 5
       start_period: 60s
@@ -19,9 +18,19 @@ services:
       - database_data:/var/lib/postgresql/data:rw
       # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
       # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
+      ###< doctrine/doctrine-bundle ###
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    command:
+      - "gotenberg"
+      - "--chromium-disable-routes=false"
 
 volumes:
-###> doctrine/doctrine-bundle ###
+  ###> doctrine/doctrine-bundle ###
   database_data:
-###< doctrine/doctrine-bundle ###
+    ###< doctrine/doctrine-bundle ###
+
+
