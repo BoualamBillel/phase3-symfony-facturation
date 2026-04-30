@@ -18,9 +18,24 @@
     <twig:StatCard label="Total Produits" value="TEST" icon="fa-solid fa-box" color="bg-purple-100 text-purple-500" />
 </div>
 
-{# TODO GRAPHIQUE #}
-<div class="h-50 flex items-center justify-center">
-    <h1>EMPLACEMENT DU GRAPHIQUE</h1>
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
+
+    <div class="flex justify-between items-center mb-10">
+        <h2 class="text-[16px] font-bold text-gray-900">Chiffre d'affaires mensuel (Factures payées)</h2>
+
+        <form method="GET" class="flex items-center">
+            <select name="year" id="year" onchange="this.form.submit()"
+                class="border-gray-300 rounded-md text-[14px] text-gray-700 focus:ring-blue-500 focus:border-blue-500 py-1.5 pl-3 pr-8 cursor-pointer hover:bg-gray-50 transition-colors shadow-sm">
+                {% for year in availableYears %}
+                <option value="{{ year }}" {% if year==selectedYear %}selected{% endif %}>{{ year }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+
+    <div class="relative h-[300px] w-full">
+        {{ render_chart(chart) }}
+    </div>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
