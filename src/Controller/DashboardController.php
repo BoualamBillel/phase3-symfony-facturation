@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Client;
 use App\Entity\Invoice;
+use App\Entity\Product;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,6 +20,38 @@ final class DashboardController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->getUser();
+
+        $invoices = $em->getRepository(Invoice::class)->findBy([
+            'owner' => $user
+        ]);
+        $revenues = 0;
+        $invoicesStandBy = 0;
+        foreach ($invoices as $invoice) {
+            if ($invoice->getStatus() === 'paid') {
+                $revenues += $invoice->getTotalAmount();
+            }
+
+            if ($invoice->getStatus() === 'validated') {
+                $invoicesStandBy++;
+            }
+        }
+
+        $clients = $em->getRepository(Client::class)->findBy([
+            'owner' => $user
+        ]);
+        $clientsNumber = 0;
+        foreach ($clients as $client) {
+            $clientsNumber++;
+        }
+
+        $products = $em->getRepository(Product::class)->findBy([
+            'owner' => $user
+        ]);
+        $productsNumber = 0;
+        foreach ($products as $product) {
+            $productsNumber++;
+        }
+
 
         $selectedYear = $request->query->get('year', date('Y'));
 
@@ -48,16 +82,16 @@ final class DashboardController extends AbstractController
         rsort($availableYears);
 
         $chart = $chartBuilder->createChart(Chart::TYPE_BAR);
-        
+
         $chart->setData([
             'labels' => ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
             'datasets' => [
                 [
                     'label' => 'Chiffre d\'Affaires',
-                    'backgroundColor' => '#3B82F6', 
-                    'hoverBackgroundColor' => '#2563EB', 
-                    'barPercentage' => 0.4, 
-                    'borderRadius' => 2, 
+                    'backgroundColor' => '#3B82F6',
+                    'hoverBackgroundColor' => '#2563EB',
+                    'barPercentage' => 0.4,
+                    'borderRadius' => 2,
                     'data' => array_values($monthlyRevenue),
                 ],
             ],
@@ -67,7 +101,7 @@ final class DashboardController extends AbstractController
             'responsive' => true,
             'maintainAspectRatio' => false,
             'plugins' => [
-                'legend' => ['display' => false], 
+                'legend' => ['display' => false],
                 'tooltip' => [
                     'mode' => 'index',
                     'intersect' => false,
@@ -76,16 +110,16 @@ final class DashboardController extends AbstractController
             'scales' => [
                 'y' => [
                     'beginAtZero' => true,
-                    'suggestedMax' => 2400, 
+                    'suggestedMax' => 2400,
                     'grid' => [
-                        'color' => '#E5E7EB', 
-                        'borderDash' => [5, 5], 
+                        'color' => '#E5E7EB',
+                        'borderDash' => [5, 5],
                     ],
                     'border' => [
-                        'display' => false, 
+                        'display' => false,
                     ],
                     'ticks' => [
-                        'padding' => 10, 
+                        'padding' => 10,
                     ]
                 ],
                 'x' => [
@@ -104,6 +138,12 @@ final class DashboardController extends AbstractController
             'availableYears' => $availableYears,
             'annualRevenue' => $annualRevenue,
             'chart' => $chart,
+            'revenues' => $revenues,
+            'invoicesStandBy' => $invoicesStandBy,
+            'clientsNumber' => $clientsNumber,
+            'productsNumber' => $productsNumber
+
         ]);
     }
 }
+
