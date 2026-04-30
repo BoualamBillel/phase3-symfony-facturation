@@ -42,19 +42,6 @@ final class InvoiceController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'show', methods: ['GET'])]
-    public function show(Invoice $invoice): Response
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
-        if ($invoice->getOwner() !== $this->getUser()) {
-            throw $this->createAccessDeniedException("Vous n'avez pas le droit d'accéder à cette facture.");
-        }
-
-        return $this->render('/invoice/show.html.twig', [
-            'invoice' => $invoice,
-        ]);
-    }
 
     #[Route('/add', name: 'add', methods: ['GET', 'POST'])]
     public function add(Request $request, EntityManagerInterface $em): Response
@@ -119,7 +106,21 @@ final class InvoiceController extends AbstractController
 
     }
 
-    #[Route(path: '/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}', name: 'show', methods: ['GET'], requirements: ['id' => '\d+'])]
+    public function show(Invoice $invoice): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        if ($invoice->getOwner() !== $this->getUser()) {
+            throw $this->createAccessDeniedException("Vous n'avez pas le droit d'accéder à cette facture.");
+        }
+
+        return $this->render('/invoice/show.html.twig', [
+            'invoice' => $invoice,
+        ]);
+    }
+    
+    #[Route(path: '/{id}/edit', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function edit(Request $request, Invoice $invoice, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -173,7 +174,7 @@ final class InvoiceController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Request $request, Invoice $invoice, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -198,7 +199,7 @@ final class InvoiceController extends AbstractController
         return $this->redirectToRoute('app_invoice_index');
     }
 
-    #[Route(path: '/{id}/validate', name: 'validate', methods: ['POST'])]
+    #[Route(path: '/{id}/validate', name: 'validate', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function validate(Request $request, Invoice $invoice, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -224,7 +225,7 @@ final class InvoiceController extends AbstractController
         return $this->redirectToRoute('app_invoice_show', ['id' => $invoice->getId()]);
     }
 
-    #[Route('/{id}/pay', name: 'pay', methods: ['POST'])]
+    #[Route('/{id}/pay', name: 'pay', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function pay(Invoice $invoice, Request $request, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -245,7 +246,7 @@ final class InvoiceController extends AbstractController
         return $this->redirectToRoute('app_invoice_show', ['id' => $invoice->getId()]);
     }
 
-    #[Route('/{id}/send', name: 'send', methods: ['POST'])]
+    #[Route('/{id}/send', name: 'send', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function send(Invoice $invoice): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
