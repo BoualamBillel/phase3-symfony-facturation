@@ -84,7 +84,7 @@
                 <label class="block text-[12px] font-medium text-gray-500 mb-1.5">Sélectionner un produit</label>
                 <select id="temp-product-select"
                     class="w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white">
-                    <option value="" data-price="" disabled selected></option>
+                    <option value="" data-price="">Sélectionner un produit</option>
                     {% for product in products %}
                     <option value="{{ product.name }}" data-price="{{ product.price }}">{{ product.name }}</option>
                     {% endfor %}
