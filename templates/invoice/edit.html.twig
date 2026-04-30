@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Créer une facture | FacturSaas{% endblock %}
+{% block title %}Modifier la facture | FacturSaas{% endblock %}
 
 {% block body %}
 <div class="max-w-5xl mx-auto py-4">
@@ -10,7 +10,16 @@
         <i class="fa-solid fa-arrow-left"></i> Retour aux factures
     </a>
 
-    <h1 class="text-[28px] font-bold text-gray-900 tracking-tight mb-8">Créer une facture</h1>
+    <div class="flex items-center gap-3 mb-8">
+        <h1 class="text-[28px] font-bold text-gray-900 tracking-tight">Modifier la facture</h1>
+        {% if invoice.status %}
+        <span
+            class="px-2.5 py-1 rounded-md bg-gray-100 text-gray-600 text-[12px] font-medium uppercase border border-gray-200">
+            {{ invoice.status == 'draft' ? 'Brouillon' : (invoice.status == 'validated' ? 'En attente' : invoice.status)
+            }}
+        </span>
+        {% endif %}
+    </div>
 
     {{ form_start(form, {'attr': {'id': 'invoice-form'}}) }}
 
@@ -19,9 +28,11 @@
 
         <div class="grid grid-cols-2 gap-8">
             <div>
-                {{ form_label(form.client, 'Client', {'label_attr': {'class': 'block text-[13px] font-medium text-gray-600 mb-2'}}) }}
+                {{ form_label(form.client, 'Client', {'label_attr': {'class': 'block text-[13px] font-medium
+                text-gray-600 mb-2'}}) }}
                 <div class="flex gap-2">
-                    {{ form_widget(form.client, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-4 py-2.5 text-[14px] focus:ring-2 focus:ring-blue-100 outline-none shadow-sm bg-white'}}) }}
+                    {{ form_widget(form.client, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-4 py-2.5
+                    text-[14px] focus:ring-2 focus:ring-blue-100 outline-none shadow-sm bg-white'}}) }}
 
                     <a href="{{ path('app_client_add') }}"
                         class="inline-flex items-center justify-center px-4 py-2.5 border border-gray-300 rounded-lg text-gray-500 hover:bg-gray-50 transition-colors shadow-sm"
@@ -32,8 +43,10 @@
             </div>
 
             <div>
-                {{ form_label(form.invoiceDate, 'Date de la facture', {'label_attr': {'class': 'block text-[13px] font-medium text-gray-600 mb-2'}}) }}
-                {{ form_widget(form.invoiceDate, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-4 py-2.5 text-[14px] focus:ring-2 focus:ring-blue-100 outline-none shadow-sm bg-white text-gray-700'}}) }}
+                {{ form_label(form.invoiceDate, 'Date de la facture', {'label_attr': {'class': 'block text-[13px]
+                font-medium text-gray-600 mb-2'}}) }}
+                {{ form_widget(form.invoiceDate, {'attr': {'class': 'w-full border border-gray-300 rounded-lg px-4
+                py-2.5 text-[14px] focus:ring-2 focus:ring-blue-100 outline-none shadow-sm bg-white text-gray-700'}}) }}
             </div>
         </div>
     </div>
@@ -53,11 +66,14 @@
                     </tr>
                 </thead>
 
-                <tbody id="invoice-lines-wrapper" class="divide-y divide-gray-100" data-index="0"
+                <tbody id="invoice-lines-wrapper" class="divide-y divide-gray-100"
+                    data-index="{{ form.invoiceLines|length }}"
                     data-prototype="{{ include('invoice/_line_prototype.html.twig', { 'form': form.invoiceLines.vars.prototype })|e('html_attr') }}">
 
                     {% for lineForm in form.invoiceLines %}
+                    <tr class="line-item group border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
                         {{ include('invoice/_line_prototype.html.twig', { 'form': lineForm }) }}
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -68,9 +84,9 @@
                 <label class="block text-[12px] font-medium text-gray-500 mb-1.5">Sélectionner un produit</label>
                 <select id="temp-product-select"
                     class="w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white">
-                    <option value="" data-price="">Selectionner un produit</option>
+                    <option value="" data-price="" disabled selected></option>
                     {% for product in products %}
-                        <option value="{{ product.name }}" data-price="{{ product.price }}">{{ product.name }}</option>
+                    <option value="{{ product.name }}" data-price="{{ product.price }}">{{ product.name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -203,6 +219,47 @@
 
             totalDisplay.textContent = grandTotal.toFixed(2) + ' €';
         }
+
+        document.querySelectorAll('.line-item').forEach(function (line) {
+            const nameInput = line.querySelector('.input-name');
+            const qtyInput = line.querySelector('.input-qty');
+            const priceInput = line.querySelector('.input-price');
+
+            if (nameInput && nameInput.value) {
+                const displayName = line.querySelector('.display-name');
+                if (displayName) displayName.textContent = nameInput.value;
+            }
+
+            if (qtyInput && qtyInput.value) {
+                const displayQty = line.querySelector('.display-qty');
+                if (displayQty) displayQty.textContent = qtyInput.value;
+            }
+
+            if (priceInput && priceInput.value) {
+                const displayPrice = line.querySelector('.display-price');
+                if (displayPrice) displayPrice.textContent = parseFloat(priceInput.value).toFixed(2) + ' €';
+            }
+        }); document.querySelectorAll('.line-item').forEach(function (line) {
+            const nameInput = line.querySelector('.input-name');
+            const qtyInput = line.querySelector('.input-qty');
+            const priceInput = line.querySelector('.input-price');
+
+            if (nameInput && nameInput.value) {
+                const displayName = line.querySelector('.display-name');
+                if (displayName) displayName.textContent = nameInput.value;
+            }
+
+            if (qtyInput && qtyInput.value) {
+                const displayQty = line.querySelector('.display-qty');
+                if (displayQty) displayQty.textContent = qtyInput.value;
+            }
+
+            if (priceInput && priceInput.value) {
+                const displayPrice = line.querySelector('.display-price');
+                if (displayPrice) displayPrice.textContent = parseFloat(priceInput.value).toFixed(2) + ' €';
+            }
+        });
+        calculateTotals();
     });
 </script>
 {% endblock %}

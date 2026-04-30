@@ -38,7 +38,7 @@ final class InvoiceController extends AbstractController
 
         return $this->render('invoice/index.html.twig', [
             'invoices' => $invoices,
-            'currentStatus' => $status, 
+            'currentStatus' => $status,
         ]);
     }
 
@@ -103,5 +103,59 @@ final class InvoiceController extends AbstractController
             'form' => $form->createView(),
         ]);
 
+    }
+
+    #[Route(path: '/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Invoice $invoice, EntityManagerInterface $em): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        if ($invoice->getOwner() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $clients = $em->getRepository(Client::class)->findBy([
+            'owner' => $invoice->getOwner(),
+        ]);
+        $products = $em->getRepository(Product::class)->findBy([
+            'owner' => $invoice->getOwner(),
+        ]);
+
+        $form = $this->createForm(InvoiceType::class, $invoice, [
+            'clients_choices' => $clients,
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $clickedStatus = $request->request->get('status');
+            if ($clickedStatus === 'validated') {
+                $invoice->setStatus('validated');
+                if (!$invoice->getNumber()) {
+                    $invoice->setNumber('FAC-' . date('Ymd') . '-' . rand(100, 999));
+                }
+            } else {
+                $invoice->setStatus('draft');
+            }
+
+            $totalFacture = 0;
+            foreach ($invoice->getInvoiceLines() as $line) {
+                $line->setInvoice($invoice);
+                $lineTotal = $line->getUnitPrice() * $line->getQuantity();
+                $line->setTotal($lineTotal);
+                $totalFacture += $lineTotal;
+            }
+            $invoice->setTotalAmount($totalFacture);
+
+            $em->flush();
+
+            $this->addFlash('success', 'Facture mise à jour avec succès.');
+            return $this->redirectToRoute('app_invoice_index');
+        }
+
+        return $this->render('invoice/edit.html.twig', [
+            'invoice' => $invoice,
+            'form' => $form->createView(),
+            'products' => $products,
+        ]);
     }
 }

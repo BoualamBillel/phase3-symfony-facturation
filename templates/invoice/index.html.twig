@@ -112,10 +112,22 @@
                         </td>
 
                         <td class="py-4 px-6 text-right">
-                            <a href="#"
-                                class="text-[13px] font-medium text-[#2563EB] hover:text-blue-800 transition-colors inline-flex items-center gap-1.5">
-                                <i class="fa-regular fa-eye"></i> Détails
-                            </a>
+                            <div class="flex justify-end items-center gap-4">
+
+                                {% if invoice.status == 'draft' %}
+                                <a href="{{ path('app_invoice_edit', {'id': invoice.id}) }}"
+                                    class="text-[13px] font-medium text-amber-600 hover:text-amber-700 transition-colors inline-flex items-center gap-1.5"
+                                    title="Modifier le brouillon">
+                                    <i class="fa-solid fa-pen-to-square"></i> Modifier
+                                </a>
+                                {% endif %}
+
+                                {# <a href="{{ path('app_invoice_show', {'id': invoice.id}) }}"
+                                    class="text-[13px] font-medium text-[#2563EB] hover:text-blue-800 transition-colors inline-flex items-center gap-1.5"> #}
+                                    <i class="fa-regular fa-eye"></i> Détails
+                                </a>
+
+                            </div>
                         </td>
                     </tr>
                     {% else %}
