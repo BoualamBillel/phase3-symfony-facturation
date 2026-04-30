@@ -2,15 +2,19 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Service\PdfGenerator;
 use App\Entity\Client;
 use App\Entity\Invoice;
 use App\Entity\Product;
 use App\Form\InvoiceType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/invoice', name: 'app_invoice_')]
@@ -120,7 +124,7 @@ final class InvoiceController extends AbstractController
             'invoice' => $invoice,
         ]);
     }
-    
+
     #[Route(path: '/{id}/edit', name: 'edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function edit(Request $request, Invoice $invoice, EntityManagerInterface $em): Response
     {
@@ -248,7 +252,7 @@ final class InvoiceController extends AbstractController
     }
 
     #[Route('/{id}/send', name: 'send', methods: ['POST'], requirements: ['id' => '\d+'])]
-    public function send(Invoice $invoice): Response
+    public function send(Invoice $invoice, PdfGenerator $pdfGenerator, MailerInterface $mailer): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
@@ -256,7 +260,47 @@ final class InvoiceController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        $this->addFlash('info', 'Fonctionnalité d\'envoi par email en cours de développement.');
+        if ($invoice->getStatus() === 'draft') {
+            $this->addFlash('error', 'Vous ne pouvez pas envoyer un brouillon au client.');
+            return $this->redirectToRoute('app_invoice_show', ['id' => $invoice->getId()]);
+        }
+
+        $clientEmail = $invoice->getClient() ? $invoice->getClient()->getEmail() : null;
+        if (!$clientEmail) {
+            $this->addFlash('error', 'Le client de cette facture n\'a pas d\'adresse email renseignée.');
+            return $this->redirectToRoute('app_invoice_show', ['id' => $invoice->getId()]);
+        }
+
+        try {
+            $pdfContent = $pdfGenerator->generateFromTwig('invoice/pdf.html.twig', [
+                'invoice' => $invoice,
+                'app' => ['user' => $this->getUser()]
+            ]);
+
+            /**
+             * @var User
+             */
+            $user = $this->getUser();
+            $companyName = $user->getCompanyName() ?? 'Notre Entreprise';
+
+            $email = (new TemplatedEmail())
+                ->from(new Address($user->getEmail(), $companyName))
+                ->to(new Address($clientEmail, $invoice->getClient()->getName()))
+                ->subject('Votre facture ' . $invoice->getNumber() . ' de la part de ' . $companyName)
+                ->htmlTemplate('emails/invoice.html.twig')
+                ->context([
+                    'invoice' => $invoice,
+                    'user' => $this->getUser(),
+                ])
+                ->attach($pdfContent, 'Facture_' . $invoice->getNumber() . '.pdf', 'application/pdf');
+
+            $mailer->send($email);
+
+            $this->addFlash('success', 'La facture a été envoyée avec succès à ' . $clientEmail);
+
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Une erreur est survenue lors de l\'envoi : ' . $e->getMessage());
+        }
 
         return $this->redirectToRoute('app_invoice_show', ['id' => $invoice->getId()]);
     }
@@ -276,12 +320,12 @@ final class InvoiceController extends AbstractController
         }
 
         $pdfContent = $pdfGenerator->generateFromTwig('invoice/pdf.html.twig', [
-            'invoice'=> $invoice,
+            'invoice' => $invoice,
             'app' => ['user' => $this->getUser()]
         ]);
 
         return new Response($pdfContent, 200, [
-            'Content-Type'=> 'application/pdf',
+            'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="Facture_' . $invoice->getNumber() . '.pdf"',
         ]);
     }

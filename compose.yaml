@@ -27,6 +27,13 @@ services:
     command:
       - "gotenberg"
       - "--chromium-disable-routes=false"
+  
+  mailer:
+    image: axllent/mailpit
+    ports:
+      - "1025:1025"   
+      - "8025:8025"   
+    restart: unless-stopped
 
 volumes:
   ###> doctrine/doctrine-bundle ###
