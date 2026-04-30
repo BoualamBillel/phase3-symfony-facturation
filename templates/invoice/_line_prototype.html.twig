@@ -1,0 +1,32 @@
+<td class="py-4 align-top">
+    <div class="display-name text-[14px] text-gray-900 font-medium"></div>
+    <div class="text-[12px] text-gray-400 mt-0.5">Saisie manuelle</div>
+    
+    <div class="hidden">
+        {{ form_widget(form.productName, {'attr': {'class': 'input-name'}}) }}
+    </div>
+</td>
+
+<td class="py-4 align-top text-center">
+    <div class="display-qty text-[14px] text-gray-900">1</div>
+    <div class="hidden">
+        {{ form_widget(form.quantity, {'attr': {'class': 'calc-input input-qty'}}) }}
+    </div>
+</td>
+
+<td class="py-4 align-top text-right">
+    <div class="display-price text-[14px] text-gray-900">0.00 €</div>
+    <div class="hidden">
+        {{ form_widget(form.unitPrice, {'attr': {'class': 'calc-input input-price'}}) }}
+    </div>
+</td>
+
+<td class="py-4 align-top text-right">
+    <div class="line-total-display text-[14px] font-medium text-gray-900">0.00 €</div>
+</td>
+
+<td class="py-4 align-top text-right pr-2">
+    <button type="button" class="remove-line-btn text-red-400 hover:text-red-600 transition-colors focus:outline-none" title="Supprimer la ligne">
+        <i class="fa-solid fa-trash-can"></i>
+    </button>
+</td>

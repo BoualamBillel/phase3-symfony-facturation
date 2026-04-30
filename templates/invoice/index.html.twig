@@ -1,0 +1,152 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Factures | FacturSaas{% endblock %}
+
+{% block body %}
+<div class="max-w-7xl mx-auto py-8">
+
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-[28px] font-bold text-gray-900 tracking-tight">Factures</h1>
+
+        <a href="{{ path('app_invoice_add') }}"
+            class="bg-[#2563EB] hover:bg-blue-700 text-white text-[14px] font-medium py-2.5 px-6 rounded-lg transition-colors flex items-center gap-2 shadow-sm">
+            <i class="fa-solid fa-plus"></i> Créer une facture
+        </a>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+
+        <div class="p-6 border-b border-gray-200 bg-gray-50/50">
+            <div class="flex items-center gap-2">
+
+                {% set activeClass = 'px-4 py-2 text-[14px] font-medium rounded-lg bg-blue-100 text-blue-700
+                transition-colors' %}
+                {% set inactiveClass = 'px-4 py-2 text-[14px] font-medium rounded-lg bg-gray-100 text-gray-600
+                hover:bg-gray-200 transition-colors' %}
+
+                <a href="{{ path('app_invoice_index') }}"
+                    class="{{ currentStatus == 'all' ? activeClass : inactiveClass }}">
+                    Toutes
+                </a>
+
+                <a href="{{ path('app_invoice_index', {'status': 'draft'}) }}"
+                    class="{{ currentStatus == 'draft' ? activeClass : inactiveClass }}">
+                    Brouillons
+                </a>
+
+                <a href="{{ path('app_invoice_index', {'status': 'validated'}) }}"
+                    class="{{ currentStatus == 'validated' ? activeClass : inactiveClass }}">
+                    En attente
+                </a>
+
+                <a href="{{ path('app_invoice_index', {'status': 'paid'}) }}"
+                    class="{{ currentStatus == 'paid' ? activeClass : inactiveClass }}">
+                    Payées
+                </a>
+
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50/50 border-b border-gray-200 text-gray-900 text-[13px] font-bold">
+                        <th class="py-4 px-6 w-40">Numéro</th>
+                        <th class="py-4 px-6 w-32">Date</th>
+                        <th class="py-4 px-6">Client</th>
+                        <th class="py-4 px-6 w-40">Total TTC</th>
+                        <th class="py-4 px-6 w-32">Statut</th>
+                        <th class="py-4 px-6 w-32 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+
+                    {% for invoice in invoices %}
+                    <tr class="hover:bg-gray-50/50 transition-colors group">
+
+                        <td class="py-4 px-6">
+                            {% if invoice.number %}
+                            <span class="text-[14px] text-gray-900 font-medium">{{ invoice.number }}</span>
+                            {% else %}
+                            <span class="text-[13px] text-gray-400 italic">Non défini</span>
+                            {% endif %}
+                        </td>
+
+                        <td class="py-4 px-6">
+                            <span class="text-[14px] text-gray-600">
+                                {{ invoice.invoiceDate ? invoice.invoiceDate|date('d/m/Y') :
+                                invoice.createdAt|date('d/m/Y') }}
+                            </span>
+                        </td>
+
+                        <td class="py-4 px-6">
+                            <span class="text-[14px] text-gray-900 font-medium">
+                                {{ invoice.client ? invoice.client.name : '<span class="text-red-400">Client
+                                    introuvable</span>'|raw }}
+                            </span>
+                        </td>
+
+                        <td class="py-4 px-6">
+                            <span class="text-[14px] text-gray-900">
+                                {{ invoice.totalAmount ? invoice.totalAmount|number_format(2, '.', ' ') : '0.00' }} €
+                            </span>
+                        </td>
+
+                        <td class="py-4 px-6">
+                            {% if invoice.status == 'paid' %}
+                            <span
+                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-green-100 text-green-700 text-[12px] font-medium">
+                                <i class="fa-regular fa-circle-check text-[11px]"></i> Payée
+                            </span>
+                            {% elseif invoice.status == 'validated' %}
+                            <span
+                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-orange-100 text-orange-700 text-[12px] font-medium">
+                                <i class="fa-regular fa-clock text-[11px]"></i> En attente
+                            </span>
+                            {% else %}
+                            <span
+                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-gray-200 text-gray-600 text-[12px] font-medium">
+                                <i class="fa-regular fa-clock text-[11px]"></i> Brouillon
+                            </span>
+                            {% endif %}
+                        </td>
+
+                        <td class="py-4 px-6 text-right">
+                            <div class="flex justify-end items-center gap-4">
+
+                                {% if invoice.status == 'draft' %}
+                                <a href="{{ path('app_invoice_edit', {'id': invoice.id}) }}"
+                                    class="text-[13px] font-medium text-amber-600 hover:text-amber-700 transition-colors inline-flex items-center gap-1.5"
+                                    title="Modifier le brouillon">
+                                    <i class="fa-solid fa-pen-to-square"></i> Modifier
+                                </a>
+                                {% endif %}
+
+                                {# <a href="{{ path('app_invoice_show', {'id': invoice.id}) }}"
+                                    class="text-[13px] font-medium text-[#2563EB] hover:text-blue-800 transition-colors inline-flex items-center gap-1.5"> #}
+                                    <i class="fa-regular fa-eye"></i> Détails
+                                </a>
+
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="py-12 text-center">
+                            <div class="text-gray-400 mb-2"><i class="fa-solid fa-file-invoice text-4xl"></i></div>
+                            <h3 class="text-lg font-medium text-gray-900">Aucune facture</h3>
+                            <p class="text-gray-500 text-sm mt-1">Commencez par créer votre première facture.</p>
+                            <a href="{{ path('app_invoice_add') }}"
+                                class="mt-4 inline-block text-[#2563EB] hover:text-blue-800 text-sm font-medium">
+                                Créer une facture &rarr;
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
