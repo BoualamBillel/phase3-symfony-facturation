@@ -95,6 +95,13 @@
                 <i class="fa-solid fa-download"></i> Télécharger / PDF
             </button>
 
+            <form action="{{ path('app_invoice_send', {'id': invoice.id}) }}" method="POST">
+                <button type="submit"
+                    class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg text-[14px] font-medium hover:bg-gray-50 transition-colors inline-flex items-center gap-2 shadow-sm">
+                    <i class="fa-regular fa-paper-plane"></i> Envoyer
+                </button>
+            </form>
+
             {% endif %}
         </div>
     </div>
