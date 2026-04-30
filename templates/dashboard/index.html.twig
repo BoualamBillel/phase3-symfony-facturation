@@ -10,26 +10,41 @@
 
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    <twig:StatCard label="Chiffre d'affaires (Payé)" value="TEST" icon="fa-solid fa-euro-sign"
+    <twig:StatCard label="Chiffre d'affaires (Payé)" value="{{ revenues }} €" icon="fa-solid fa-euro-sign"
         color="bg-emerald-100 text-emerald-600" />
-    <twig:StatCard label="Factures en attente" value="TEST" icon="fa-solid fa-file-invoice"
+    <twig:StatCard label="Factures en attente" value="{{ invoicesStandBy }}" icon="fa-solid fa-file-invoice"
         color="bg-orange-100 text-orange-500" />
-    <twig:StatCard label="Total Clients" value="TEST" icon="fa-solid fa-users" color="bg-blue-100 text-blue-500" />
-    <twig:StatCard label="Total Produits" value="TEST" icon="fa-solid fa-box" color="bg-purple-100 text-purple-500" />
+    <twig:StatCard label="Total Clients" value="{{clientsNumber }}" icon="fa-solid fa-users" color="bg-blue-100 text-blue-500" />
+    <twig:StatCard label="Total Produits" value="{{ productsNumber }}" icon="fa-solid fa-box" color="bg-purple-100 text-purple-500" />
 </div>
 
-{# TODO GRAPHIQUE #}
-<div class="h-50 flex items-center justify-center">
-    <h1>EMPLACEMENT DU GRAPHIQUE</h1>
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
+
+    <div class="flex justify-between items-center mb-10">
+        <h2 class="text-[16px] font-bold text-gray-900">Chiffre d'affaires mensuel (Factures payées)</h2>
+
+        <form method="GET" class="flex items-center">
+            <select name="year" id="year" onchange="this.form.submit()"
+                class="border-gray-300 rounded-md text-[14px] text-gray-700 focus:ring-blue-500 focus:border-blue-500 py-1.5 pl-3 pr-8 cursor-pointer hover:bg-gray-50 transition-colors shadow-sm">
+                {% for year in availableYears %}
+                <option value="{{ year }}" {% if year==selectedYear %}selected{% endif %}>{{ year }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+
+    <div class="relative h-[300px] w-full">
+        {{ render_chart(chart) }}
+    </div>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-    <twig:ActionCard title="Créer une facture" subtitle="Nouvelle prestation" path="#" theme="primary" />
+    <twig:ActionCard title="Créer une facture" subtitle="Nouvelle prestation" path="{{ path('app_invoice_add')}}" theme="primary" />
 
-    <twig:ActionCard title="Ajouter un client" subtitle="Gérer le répertoire" path="#" />
+    <twig:ActionCard title="Ajouter un client" subtitle="Gérer le répertoire" path="{{ path('app_client_add')}}" />
 
     <twig:ActionCard title="Créer un produit / service"
-        subtitle="Enrichir le catalogue pour rediger rapidement vos factures" path="#" />
+        subtitle="Enrichir le catalogue pour rediger rapidement vos factures" path="{{ path('app_product_add')}}" />
 
     <twig:ActionCard title="Relancer tous les clients"
         subtitle="Envoyer un mail à tous les clients en retard de paiement" path="#" />
